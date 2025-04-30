@@ -7,7 +7,7 @@ const App = (props) => {
       <ul>
       {notes.map(note => {
         console.log(note.important)
-        return <li key={note.id}>{note.content} has {note.importan ? 'Yes' : 'No'}</li>
+        return <li key={note.id}>{note.content} has {note.important ? 'Yes' : 'No'}</li>
       })}      
       </ul>
     </div>
