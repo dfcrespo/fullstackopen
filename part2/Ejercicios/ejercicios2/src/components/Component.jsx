@@ -13,8 +13,14 @@ const Course = ({courses}) => {
             </li>
           ))}
         </ul>
+        <p>Total ejercicios del curso {course.parts.reduce((suma, ejercicio) => {
+          console.log('Ejercicio actual:', ejercicio)
+          console.log('Suma acumulada:', suma)
+          return suma + ejercicio.exercises
+        },0)}</p>
       </div>
     )))}
+     
     </>
   )
 }
