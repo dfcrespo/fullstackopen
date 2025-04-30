@@ -1,17 +1,27 @@
-const App = (props) => {
-  const { notes } = props
+import Note from './components/Note'
 
+const App = ({ notes }) => {
+  
   return (
     <div>
       <h1>Notes</h1>
       <ul>
-      {notes.map(note => {
-        console.log(note.important)
-        return <li key={note.id}>{note.content} has {note.important ? 'Yes' : 'No'}</li>
-      })}      
+      {notes.map(note =>
+        console.log('note', note) || //otra opcion es console.log('note', note) return <Note key={note.id} ... />   
+        <Note key={note.id} note={note.content} important={note.important} /> 
+      )}      
       </ul>
     </div>
   )
 }
+
+//Indices de matriz como claves key
+{/* <ul>
+  {notes.map((note, i) => 
+    <li key={i}>
+      {note.content}
+    </li>
+  )}
+</ul> */}
 
 export default App
