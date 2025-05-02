@@ -8,15 +8,15 @@ const App = () => {
     { name: 'Ada Lovelace', number: '39-44-5323523', id: 2 },
     { name: 'Dan Abramov', number: '12-43-234345', id: 3 },
     { name: 'Mary Poppendieck', number: '39-23-6423122', id: 4 }
-  ]) 
+  ])
+
   const [newName, setNewName] = useState('')
   const [newTelephone, setNewTelephone] = useState('')
   const [newFilter, setNewFilter] = useState('')
 
   const addPerson = (event) => {
     event.preventDefault()
-    //console.log('button clicked', event.target)
-    
+    //console.log('button clicked', event.target)    
     const personObject = { //Crea un nuevo objeto para la nota llamado noteObject que recibirá su contenido del estado del componente newNote
       name: newName,
       telephone: newTelephone,
