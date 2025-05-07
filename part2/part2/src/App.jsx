@@ -1,12 +1,23 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import axios from 'axios'
 import Note from './components/Note'
 
-const App = (props) => {
-  const [notes, setNotes] = useState(props.notes)
-  const [newNote, setNewNote] = useState(
-    'a new note...'
-  )
+const App = () => {
+  const [notes, setNotes] = useState([])
+  const [newNote, setNewNote] = useState('') //El valor inicial de newNote es una cadena vacía
   const [showAll, setShowAll] = useState(true)
+
+  useEffect(() => {
+    console.log('effect')
+    axios
+      .get('http://localhost:3001/notes') //Realiza una solicitud GET a la URL especificada
+      .then(response => {
+        console.log('promise fulfilled') //Cuando se cumple la promesa, se ejecuta esta función
+        setNotes(response.data) //Actualiza el estado de notes con los datos recibidos de la respuesta
+      })
+  }, []) //El segundo argumento vacío [] significa que el efecto solo se ejecutará una vez, al montar el componente
+  //El efecto se ejecuta después de que el componente se haya montado y cada vez que se actualice
+  console.log('render', notes.length, 'notes') //Muestra en la consola el número de notas que se han cargado  
 
   const addNote = (event) => {
     event.preventDefault()
