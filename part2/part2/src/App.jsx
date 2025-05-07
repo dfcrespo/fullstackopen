@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
+import noteService from './services/notes'
 import Note from './components/Note'
 
 const App = () => {
@@ -9,32 +9,46 @@ const App = () => {
 
   useEffect(() => {
     console.log('effect')
-    axios
-      .get('http://localhost:3001/notes') //Realiza una solicitud GET a la URL especificada
-      .then(response => {
-        console.log('promise fulfilled') //Cuando se cumple la promesa, se ejecuta esta función
-        setNotes(response.data) //Actualiza el estado de notes con los datos recibidos de la respuesta
+    noteService
+      .getAll()
+      .then(initialNotes => {
+        setNotes(initialNotes)
       })
   }, []) //El segundo argumento vacío [] significa que el efecto solo se ejecutará una vez, al montar el componente
   //El efecto se ejecuta después de que el componente se haya montado y cada vez que se actualice
-  console.log('render', notes.length, 'notes') //Muestra en la consola el número de notas que se han cargado  
+  //console.log('render', notes.length, 'notes')
 
   const addNote = (event) => {
     event.preventDefault()
     //console.log('button clicked', event.target)
     const noteObject = { //Crea un nuevo objeto para la nota llamado noteObject que recibirá su contenido del estado del componente newNote
       content: newNote,
-      important: Math.random() < 0.5,
-      id: notes.length + 1, //Identificador único id se genera en función del número total de notas, sera unico
+      important: Math.random() < 0.5,      
     }
-  
-    setNotes(notes.concat(noteObject))//Concat crea un nuevo array en la que se incluyen el contenido del array anterior y el nuevo elemento.
-    setNewNote('')//Restablece el valor del elemento de input llamando a la función setNewNote del estado de newNote
+
+    noteService
+      .create(noteObject)
+      .then(returnedNote => {
+        setNotes(notes.concat(returnedNote))
+        setNewNote('')
+      })
   }
 
   const handleNoteChange = (event) => {
     console.log(event.target.value)
     setNewNote(event.target.value)
+  }
+
+  const toggleImportanceOf = (id) => {
+    //console.log('importance of ' + id + ' needs to be toggled')
+    const note = notes.find(n => n.id === id)
+    const changedNote = { ...note, important: !note.important }
+
+    noteService
+      .update(id, changedNote)
+      .then(returnedNote => {
+        setNotes(notes.map(note => note.id !== id ? note : returnedNote))
+      })
   }
 
   const notesToShow = showAll
@@ -53,7 +67,10 @@ const App = () => {
       </div>
       <ul>        
         {notesToShow.map(note =>
-          <Note key={note.id} note={note} />
+          <Note key={note.id} 
+          note={note} 
+          toggleImportance={() => toggleImportanceOf(note.id)}
+          />
         )}
       </ul>
       <form onSubmit={addNote}>
