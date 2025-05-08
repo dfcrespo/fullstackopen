@@ -14,11 +14,16 @@ const PersonForm = (props) => {
   )
 }
 
-const AllPersons = ({ persons }) => {
+const AllPersons = ({ persons, toggleErase }) => {
+  const label = 'delete'
+    
   return (
     <ul>
       {persons.map(person =>
-        <li key={person.id}>{person.name} telephone: {person.telephone}</li>
+        <li key={person.id}>
+          {person.name} telephone: {person.telephone}
+          <button onClick={() => toggleErase(person.id)}>{label}</button>
+        </li>
       )}
     </ul>
   )
