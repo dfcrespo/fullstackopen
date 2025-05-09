@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { PersonForm, Filter, AllPersons } from './components/Agenda'
 import personService from './services/persons'
+import Notification from './components/Notification'
 
 const App = () => {
 
@@ -8,6 +9,8 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newTelephone, setNewTelephone] = useState('')
   const [newFilter, setNewFilter] = useState('')
+  const [message, setMessage] = useState('')
+  const [typeMessage, setTypeMessage] = useState('')
 
   useEffect(() => {
     console.log('effect')
@@ -29,9 +32,17 @@ const App = () => {
         .erase(id)
         .then(() => {
           setPersons(persons.filter(person => person.id !== id))
-        })        
+        })
+        .catch(error => {
+          console.error(error)
+          setMessage(`Information of ${newName} has already been removed from server`)
+          setTypeMessage('error')
+          setTimeout(() => {
+            setMessage(null)
+          }, 5000)
+          setPersons(persons.filter(p => p.id !== id))
+        })       
     }
-
   }
 
   const addPerson = (event) => {
@@ -56,7 +67,22 @@ const App = () => {
             setPersons(persons.map(person => person.id !== existingPerson.id ? person : response.data))
             setNewName('')
             setNewTelephone('')
+            setMessage(`Updated ${newName}`)
+            setTypeMessage('success')
+            setTimeout(() => {
+            setMessage(null)
+            }, 5000)
           })
+          .catch(error => {
+            console.error(error)
+            setMessage(`Information of ${newName} has already been removed from server`)
+            setTypeMessage('error')
+            setTimeout(() => {
+              setMessage(null)
+            }, 5000)
+            setPersons(persons.filter(p => p.id !== existingPerson.id))
+          })
+        
       }
     } else {
       personService
@@ -65,7 +91,20 @@ const App = () => {
           setPersons(persons.concat(response.data))
           setNewName('')
           setNewTelephone('')
+          setMessage(`Added ${newName}`)
+          setTypeMessage('success')
+          setTimeout(() => {
+          setMessage(null)
+          }, 5000)
         })
+        .catch(error => {
+          console.error(error)
+          setMessage(`Error adding ${newName}`)
+          setTypeMessage('error')
+          setTimeout(() => {
+            setMessage(null)
+          }, 5000)
+        })        
     }
   }
 
@@ -94,6 +133,7 @@ const App = () => {
       {/* <div>debug: {newName}</div> */}
       
       <h2>Add a new</h2>
+      <Notification typeMessage={typeMessage} message={message} />
       <PersonForm
         onSubmit={addPerson}
         valueName={newName} onChangeName={handlePersonChange} newName={newName} persons={persons}
