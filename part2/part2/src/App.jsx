@@ -5,7 +5,7 @@ import Notification from './components/Notification'
 import Footer from './components/Footer'
 
 const App = () => {
-  const [notes, setNotes] = useState([])
+  const [notes, setNotes] = useState(null)
   const [newNote, setNewNote] = useState('') //El valor inicial de newNote es una cadena vacía
   const [showAll, setShowAll] = useState(true)
   const [errorMessage, setErrorMessage] = useState(null)
@@ -20,6 +20,10 @@ const App = () => {
   }, []) //El segundo argumento vacío [] significa que el efecto solo se ejecutará una vez, al montar el componente
   //El efecto se ejecuta después de que el componente se haya montado y cada vez que se actualice
   //console.log('render', notes.length, 'notes')
+
+  if (!notes) { 
+    return null 
+  }
 
   const addNote = (event) => {
     event.preventDefault()
