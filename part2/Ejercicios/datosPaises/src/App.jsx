@@ -27,7 +27,7 @@ const App = () => {
     const country = filteredCountries[0];
     if (!country.capital) return;
   
-    const apiKey = '4a481d888bdcf3496eeed5efd986ea89';
+    const apiKey = '';
     const capital = country.capital[0];
     const url = `https://api.openweathermap.org/data/2.5/weather?q=${capital}&appid=${apiKey}&units=metric`;
   
