@@ -1,8 +1,13 @@
 const express = require('express')
 const cors = require('cors')
 const app = express()
+const morgan = require('morgan')
 
 app.use(cors())
+app.use(express.json()) //Middleware para parsear el cuerpo de la petición a JSON
+app.use(morgan('tiny'))
+
+app.use(express.static('dist'))
 
 let notes = [
   {
@@ -29,8 +34,6 @@ const requestLogger = (request, response, next) => {
   console.log('---')
   next()
 }
-
-app.use(express.json()) //Middleware para parsear el cuerpo de la petición a JSON
 
 app.get('/', (request, response) => { //Controlador de eventos para la ruta raíz, dos parametros request y response, request es la petición y response es la respuesta
   response.send('<h1>Hello World!</h1>')
