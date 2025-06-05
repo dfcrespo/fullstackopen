@@ -1,5 +1,6 @@
 const express = require('express')
 const app = express()
+const morgan = require('morgan')
 
 let persons = [
   { 
@@ -25,6 +26,10 @@ let persons = [
 ]
 
 app.use(express.json()) //Middleware para parsear el cuerpo de la petición a JSON
+
+morgan.token('body', (req) => JSON.stringify(req.body));
+
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'));
 
 app.get('/', (request, response) => { //Controlador de eventos para la ruta raíz, dos parametros request y response, request es la petición y response es la respuesta
   response.send('<h1>Hello World!</h1>')
